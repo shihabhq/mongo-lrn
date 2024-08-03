@@ -11,7 +11,6 @@ const main = async () => {
 
         const db = client.db('Dev-shop'); // Get the database
         const collection = db.collection('products'); // Get the collection
-
         const data = await collection.aggregate([{$project:{ company: 1,_id:0 }}]).toArray() // Query the collection
         console.log(data);
 
