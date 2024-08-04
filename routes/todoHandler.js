@@ -2,6 +2,9 @@ import express from "express";
 import PostSchema from "../schemas/todoSchema.js";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
+import testValidity from "../middlewares/checkLogin.js";
+import checkLogin from "../middlewares/checkLogin.js";
+
 
 //initialize handler
 const todoHandler = express.Router();
@@ -10,7 +13,7 @@ const todoHandler = express.Router();
 const Todo = new mongoose.model("Todo", PostSchema);
 
 //get all the todos
-todoHandler.get("/", async (req, res) => {
+todoHandler.get("/",testValidity, async (req, res) => {
   try {
     const data = await Todo.find({}, { title: 1, _id: 0 });
     res.status(200).send(data);
@@ -29,8 +32,14 @@ todoHandler.get("/:id", async (req, res) => {
   }
 });
 
+PostSchema.query = {
+  byLang:function(lang){
+    return this.find({title: new RegExp(lang,'i')})
+  }
+}
+
 //post todo
-todoHandler.post("/", async (req, res) => {
+todoHandler.post("/",checkLogin, async (req, res) => {
   try {
     await Todo.insertMany(req.body);
     res.status(201).send("successfully added todo");

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 const PostSchema = mongoose.Schema({
   title: {
@@ -13,6 +14,11 @@ const PostSchema = mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  user: {
+    type: ObjectId,
+    ref:'User' //one to one relation
+
   },
 });
 
